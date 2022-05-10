@@ -24,7 +24,24 @@ exports.login = async (req, res) => {
     });
 }
 
-exports.users = async (req, res) => {
+exports.listuser = async (req, res) => {
     const users = await User.find();
     res.json(users);
+}
+
+exports.userUpdate = async (req, res) => {
+    const { id } = req.params;
+    const { name, phone, email } = req.body;
+    const user = await User.findByIdAndUpdate(id, { phone });
+    res.json({
+        message: 'User updated successfully'
+    });
+}
+
+exports.userDelete = async (req, res) => {
+    const { id } = req.params;
+    const user = await User.findByIdAndDelete(id);
+    res.json({
+        message: 'User deleted successfully'
+    });
 }
