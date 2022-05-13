@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const User = require('../models/userModel');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
     const { name, phone, email, password } = req.body;
@@ -16,11 +17,16 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-    if (!user) { return res.status(404).json({ message: 'User not found'});}
+    if (!user) { return res.status(404).json({ message: 'Usuario no existe'});}
     const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) { return res.status(400).json({ message: 'Invalid password'});}
+    if (!validPassword) { return res.status(400).json({ message: 'password incorrecto'});}
+    const accestoken = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: '1m' });
+    const refreshtoken = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: '10m' });
     res.json({
-        message: 'User logged successfully'
+        accestoken,
+        refreshtoken,
+        message: `Bienvenido ${user.name}`,
+        user: {name: user.name, email: user.email, phone: user.phone}
     });
 }
 
