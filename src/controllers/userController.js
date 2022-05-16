@@ -20,8 +20,8 @@ exports.login = async (req, res) => {
     if (!user) { return res.status(404).json({ message: 'Usuario no existe'});}
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) { return res.status(400).json({ message: 'password incorrecto'});}
-    const accestoken = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: '1m' });
-    const refreshtoken = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: '10m' });
+    const accestoken = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: '5m' });
+    const refreshtoken = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: '15m' });
     res.json({
         accestoken,
         refreshtoken,
