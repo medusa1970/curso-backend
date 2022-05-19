@@ -1,15 +1,13 @@
 const express = require('express');
-const userRoutes = require('./router/userRouter');
-const app = express();
+const petRouter = require('./router/petRouter');
+app = express();
 
+require('./database')
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-require('./database')
-app.use('/api/users', userRoutes);
-
+app.use('/api/pets', petRouter);
 const PORT = process.env.PORT || 3000;
-
-app.listen (PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-    });
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en puerto ${PORT}`);
+});
